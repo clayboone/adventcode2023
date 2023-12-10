@@ -1,4 +1,4 @@
-.PHONY all: day01
+.PHONY all: create_test_data
 
 create_test_data:
 	@echo "creating test data..."
@@ -8,6 +8,3 @@ create_test_data:
 
 	@# I never liked my SSDs anyway...
 	python create_big_input.py big_input_10000mb.txt 10000
-
-day01:
-	echo

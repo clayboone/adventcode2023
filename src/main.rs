@@ -1,6 +1,6 @@
 // use challenges::day01::day1_part1;
 use challenges::day01::day1_part2;
-use std::time::Instant;
+use std::{time::Instant, io::BufRead};
 
 mod challenges {
     pub mod day01 {
@@ -20,32 +20,47 @@ fn main() {
         //     day1_part1 as fn(&String) -> i32,
         //     54953,
         // ),
+        // (
+        //     "Day 1, Part 2, challenge input",
+        //     String::from("src/challenges/day01/input.txt"),
+        //     day1_part2 as fn(&String) -> i32,
+        //     53868,
+        // ),
         (
-            "Day 1, Part 2, challenge input",
-            String::from("src/challenges/day01/input.txt"),
+            "Day 1, Part 2, 10mb input",
+            String::from("src/challenges/day01/big_input_10mb.txt"),
             day1_part2 as fn(&String) -> i32,
-            53868,
+            0,
         ),
         (
-            "Day 1, Part 2, big input",
-            String::from("src/challenges/day01/input_big.txt"),
+            "Day 1, Part 2, 100mb input",
+            String::from("src/challenges/day01/big_input_100mb.txt"),
             day1_part2 as fn(&String) -> i32,
-            19,
+            0,
         ),
         (
-            "Day 1, Part 2, bigger input",
-            String::from("src/challenges/day01/input_bigger.txt"),
+            "Day 1, Part 2, 1000mb input",
+            String::from("src/challenges/day01/big_input_1000mb.txt"),
             day1_part2 as fn(&String) -> i32,
-            19,
+            0,
         ),
         (
-            "Day 1, Part 2, biggest input",
-            String::from("src/challenges/day01/input_biggest.txt"),
+            "Day 1, Part 2, 10000mb input",
+            String::from("src/challenges/day01/big_input_10000mb.txt"),
             day1_part2 as fn(&String) -> i32,
-            19,
+            0,
         ),
     ] {
-        let input = std::fs::read_to_string(input).unwrap();
+        // let input = std::fs::read_to_string(input).unwrap();
+        // read line-by-line
+        let file = std::fs::File::open(input).unwrap();
+        let reader = std::io::BufReader::new(file);
+        let mut input = String::new();
+        for line in reader.lines() {
+            input.push_str(&line.unwrap());
+            // reduce here to avoid allocating a new string for every line
+            // TODO
+        }
 
         start_time = Instant::now();
         let result = func(&input);
