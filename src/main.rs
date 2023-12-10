@@ -1,6 +1,6 @@
 // use challenges::day01::day1_part1;
 use challenges::day01::day1_part2;
-use std::{time::Instant, io::BufRead};
+use std::{io::BufRead, time::Instant};
 
 mod challenges {
     pub mod day01 {
@@ -55,15 +55,18 @@ fn main() {
         // read line-by-line
         let file = std::fs::File::open(input).unwrap();
         let reader = std::io::BufReader::new(file);
-        let mut input = String::new();
-        for line in reader.lines() {
-            input.push_str(&line.unwrap());
-            // reduce here to avoid allocating a new string for every line
-            // TODO
-        }
+        // let mut input = String::new();
+        let mut result = 0;
 
         start_time = Instant::now();
-        let result = func(&input);
+        for line in reader.lines() {
+            // input.push_str(&line.unwrap());
+            // reduce here to avoid allocating a new string for every line
+            // TODO
+            result += get_first_and_last_digits(&line.unwrap()).parse::<i32>().unwrap();
+        }
+
+        // let result = func(&input);
         println!("{}: {}ms", day_and_part, start_time.elapsed().as_millis());
 
         println!(
@@ -77,4 +80,85 @@ fn main() {
             }
         );
     }
+}
+
+fn get_first_and_last_digits(line: &String) -> String {
+    let mut first_and_last_digits_in_line = String::new();
+
+    let mut beginning_of_line = String::new();
+    let mut end_of_line = String::new();
+
+    'outer: for chr in line.chars() {
+        if chr.is_numeric() {
+            first_and_last_digits_in_line.push(chr as char);
+            break;
+        }
+
+        beginning_of_line.push(chr);
+
+        // No need to proceed if we haven't read at least 3 characters.
+        if beginning_of_line.len() < 3 {
+            continue;
+        }
+
+        for (word, number) in [
+            ("one", "1"),
+            ("two", "2"),
+            ("three", "3"),
+            ("four", "4"),
+            ("five", "5"),
+            ("six", "6"),
+            ("seven", "7"),
+            ("eight", "8"),
+            ("nine", "9"),
+        ] {
+            if beginning_of_line.ends_with(word) {
+                first_and_last_digits_in_line.push_str(number);
+                break 'outer;
+            }
+        }
+    }
+
+    if first_and_last_digits_in_line.len() < 1 {
+        first_and_last_digits_in_line.push('0');
+    }
+
+    // Now go backwards...
+    'outer: for chr in line.chars().rev() {
+        if chr.is_numeric() {
+            first_and_last_digits_in_line.push(chr as char);
+            break;
+        }
+
+        end_of_line.push(chr);
+
+        // No need to proceed if we haven't read at least 3 characters.
+        if end_of_line.len() < 3 {
+            continue;
+        }
+
+        for (word, number) in [
+            ("one", "1"),
+            ("two", "2"),
+            ("three", "3"),
+            ("four", "4"),
+            ("five", "5"),
+            ("six", "6"),
+            ("seven", "7"),
+            ("eight", "8"),
+            ("nine", "9"),
+        ] {
+            if end_of_line.ends_with(word.chars().rev().collect::<String>().as_str()) {
+                first_and_last_digits_in_line.push_str(number);
+                break 'outer;
+            }
+        }
+    }
+
+    if first_and_last_digits_in_line.len() < 2 {
+        first_and_last_digits_in_line.push('0');
+    }
+
+    // parsed_lines.push_str(&format!("{}\n", first_and_last_digits_in_line));
+    first_and_last_digits_in_line
 }

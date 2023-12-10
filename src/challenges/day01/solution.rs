@@ -122,15 +122,7 @@ pub fn day1_part2(input: &String) -> i32 {
             first_and_last_digits_in_line.push('0');
         }
 
-        // first_and_last_digits_in_line = line
-        //     .chars()
-        //     .filter(|c| c.is_numeric())
-        //     .collect::<String>();
-
         parsed_lines.push_str(&format!("{}\n", first_and_last_digits_in_line));
-
-        // let output = first_and_last_digits_in_line.parse::<i32>().unwrap_or(0);
-        // println!("line: {}, output: {}", line, output);
     }
 
     day1_part1(&parsed_lines)
