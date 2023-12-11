@@ -13,43 +13,44 @@ mod challenges {
 fn main() {
     let mut start_time: Instant;
 
-    for (day_and_part, input, func, correct_answer) in [
+    // for (day_and_part, input, func, correct_answer) in [
+    for (day_and_part, input, correct_answer) in [
         // (
         //     "Day 1, Part 1",
         //     String::from("src/challenges/day01/input.txt"),
         //     day1_part1 as fn(&String) -> i32,
         //     54953,
         // ),
-        // (
-        //     "Day 1, Part 2, challenge input",
-        //     String::from("src/challenges/day01/input.txt"),
-        //     day1_part2 as fn(&String) -> i32,
-        //     53868,
-        // ),
+        (
+            "Day 1, Part 2, challenge input",
+            String::from("src/challenges/day01/input.txt"),
+            // day1_part2 as fn(&String) -> i32,
+            53868,
+        ),
         (
             "Day 1, Part 2, 10mb input",
             String::from("src/challenges/day01/big_input_10mb.txt"),
-            day1_part2 as fn(&String) -> i32,
+            // day1_part2 as fn(&String) -> i32,
             0,
         ),
         (
             "Day 1, Part 2, 100mb input",
             String::from("src/challenges/day01/big_input_100mb.txt"),
-            day1_part2 as fn(&String) -> i32,
+            // day1_part2 as fn(&String) -> i32,
             0,
         ),
-        (
-            "Day 1, Part 2, 1000mb input",
-            String::from("src/challenges/day01/big_input_1000mb.txt"),
-            day1_part2 as fn(&String) -> i32,
-            0,
-        ),
-        (
-            "Day 1, Part 2, 10000mb input",
-            String::from("src/challenges/day01/big_input_10000mb.txt"),
-            day1_part2 as fn(&String) -> i32,
-            0,
-        ),
+        // (
+        //     "Day 1, Part 2, 1000mb input",
+        //     String::from("src/challenges/day01/big_input_1000mb.txt"),
+        //     day1_part2 as fn(&String) -> i32,
+        //     0,
+        // ),
+        // (
+        //     "Day 1, Part 2, 10000mb input",
+        //     String::from("src/challenges/day01/big_input_10000mb.txt"),
+        //     day1_part2 as fn(&String) -> i32,
+        //     0,
+        // ),
     ] {
         // let input = std::fs::read_to_string(input).unwrap();
         // read line-by-line
