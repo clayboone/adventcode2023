@@ -64,7 +64,9 @@ fn main() {
             // input.push_str(&line.unwrap());
             // reduce here to avoid allocating a new string for every line
             // TODO
-            result += get_first_and_last_digits(&line.unwrap()).parse::<i32>().unwrap();
+            result += get_first_and_last_digits(&line.unwrap())
+                .parse::<i32>()
+                .unwrap();
         }
 
         // let result = func(&input);
@@ -102,17 +104,7 @@ fn get_first_and_last_digits(line: &String) -> String {
             continue;
         }
 
-        for (word, number) in [
-            ("one", "1"),
-            ("two", "2"),
-            ("three", "3"),
-            ("four", "4"),
-            ("five", "5"),
-            ("six", "6"),
-            ("seven", "7"),
-            ("eight", "8"),
-            ("nine", "9"),
-        ] {
+        for (word, number) in WORD_NUMBER_MAPPING {
             if beginning_of_line.ends_with(word) {
                 first_and_last_digits_in_line.push_str(number);
                 break 'outer;
@@ -138,17 +130,7 @@ fn get_first_and_last_digits(line: &String) -> String {
             continue;
         }
 
-        for (word, number) in [
-            ("one", "1"),
-            ("two", "2"),
-            ("three", "3"),
-            ("four", "4"),
-            ("five", "5"),
-            ("six", "6"),
-            ("seven", "7"),
-            ("eight", "8"),
-            ("nine", "9"),
-        ] {
+        for (word, number) in WORD_NUMBER_MAPPING {
             if end_of_line.ends_with(word.chars().rev().collect::<String>().as_str()) {
                 first_and_last_digits_in_line.push_str(number);
                 break 'outer;
@@ -163,3 +145,17 @@ fn get_first_and_last_digits(line: &String) -> String {
     // parsed_lines.push_str(&format!("{}\n", first_and_last_digits_in_line));
     first_and_last_digits_in_line
 }
+
+// Moving this out of the function to avoid allocating a new array every time.
+// (this seems to make only a small difference; ~20ms in debug)
+const WORD_NUMBER_MAPPING: [(&str, &str); 9] = [
+    ("one", "1"),
+    ("two", "2"),
+    ("three", "3"),
+    ("four", "4"),
+    ("five", "5"),
+    ("six", "6"),
+    ("seven", "7"),
+    ("eight", "8"),
+    ("nine", "9"),
+];
