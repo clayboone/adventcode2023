@@ -88,7 +88,7 @@ fn main() {
             "INCORRECT"
         };
 
-        let time_taken = match time_elapsed.as_secs() {
+        let time_taken = match time_elapsed.as_millis() {
             0 => format!("{}μs", time_elapsed.as_micros()),
             _ => format!("{}ms", time_elapsed.as_millis()),
         };
