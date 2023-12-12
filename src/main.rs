@@ -34,25 +34,25 @@ fn main() {
             "Day 1, Part 2, 10mb input",
             String::from("src/challenges/day01/big_input_10mb.txt"),
             // day1_part2 as fn(&String) -> i32,
-            0,
+            112640,
         ),
         (
             "Day 1, Part 2, 100mb input",
             String::from("src/challenges/day01/big_input_100mb.txt"),
             // day1_part2 as fn(&String) -> i32,
-            0,
+            1126400,
         ),
         (
             "Day 1, Part 2, 1000mb input",
             String::from("src/challenges/day01/big_input_1000mb.txt"),
             // day1_part2 as fn(&String) -> i32,
-            0,
+            11264000,
         ),
         (
             "Day 1, Part 2, 10000mb input",
             String::from("src/challenges/day01/big_input_10000mb.txt"),
             // day1_part2 as fn(&String) -> i32,
-            0,
+            112640000,
         ),
     ] {
         let (tx, rx) = mpsc::channel();
