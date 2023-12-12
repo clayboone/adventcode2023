@@ -13,8 +13,6 @@ mod challenges {
     }
 }
 
-const READ_CHUNK_SIZE: usize = 500;
-
 fn main() {
     let mut start_time: Instant;
 
@@ -63,17 +61,8 @@ fn main() {
         let reader_thread = thread::spawn(move || {
             if let Ok(file) = std::fs::File::open(&input) {
                 let reader = std::io::BufReader::new(file);
-                let mut lines_chunk = Vec::with_capacity(READ_CHUNK_SIZE); // some arbitrary number FIXME
                 for line in reader.lines() {
-                    lines_chunk.push(line.unwrap());
-                    // tx.send(line.unwrap()).unwrap();
-                    if lines_chunk.len() >= READ_CHUNK_SIZE {
-                        tx.send(lines_chunk.join("\n")).unwrap();
-                        lines_chunk.clear();
-                    }
-                }
-                if !lines_chunk.is_empty() {
-                    tx.send(lines_chunk.join("\n")).unwrap();
+                    tx.send(line.unwrap()).unwrap();
                 }
             }
             drop(tx);
@@ -82,14 +71,8 @@ fn main() {
         // Process lines in another thread.
         let accumulator_thread = thread::spawn(move || {
             let mut result = 0;
-            // for line in rx {
-            //     result += get_first_and_last_digits(&line).parse::<i32>().unwrap();
-            // }
-            for received in rx {
-                // result += get_first_and_last_digits(&received).parse::<i32>().unwrap();
-                for line in received.lines() {
-                    result += get_first_and_last_digits(line).parse::<i32>().unwrap();
-                }
+            for line in rx {
+                result += get_first_and_last_digits(&line).parse::<i32>().unwrap();
             }
             result
         });
@@ -97,37 +80,22 @@ fn main() {
         start_time = Instant::now();
         reader_thread.join().unwrap();
         let result = accumulator_thread.join().unwrap();
-        println!("{}: {}ms", day_and_part, start_time.elapsed().as_millis());
+        let time_elapsed = start_time.elapsed();
 
-        // // let input = std::fs::read_to_string(input).unwrap();
-        // // read line-by-line
-        // let file = std::fs::File::open(input).unwrap();
-        // let reader = std::io::BufReader::new(file);
-        // // let mut input = String::new();
-        // let mut result = 0;
+        let correctness = if result == correct_answer {
+            "CORRECT"
+        } else {
+            "INCORRECT"
+        };
 
-        // start_time = Instant::now();
-        // for line in reader.lines() {
-        //     // input.push_str(&line.unwrap());
-        //     // reduce here to avoid allocating a new string for every line
-        //     // TODO
-        //     result += get_first_and_last_digits(&line.unwrap())
-        //         .parse::<i32>()
-        //         .unwrap();
-        // }
-
-        // let result = func(&input);
-        // println!("{}: {}ms", day_and_part, start_time.elapsed().as_millis());
+        let time_taken = match time_elapsed.as_secs() {
+            0 => format!("{}μs", time_elapsed.as_micros()),
+            _ => format!("{}ms", time_elapsed.as_millis()),
+        };
 
         println!(
-            "{}: {} ({})",
-            day_and_part,
-            result,
-            if result == correct_answer {
-                "CORRECT"
-            } else {
-                "INCORRECT"
-            }
+            "{}: {} ({}) in {}",
+            day_and_part, result, correctness, time_taken
         );
     }
 }
@@ -178,10 +146,6 @@ fn get_first_and_last_digits(line: &str) -> String {
         }
 
         for (word, number) in REVERSED_WORD_NUMBER_MAPPING {
-            // if end_of_line.ends_with(word.chars().rev().collect::<String>().as_str()) {
-            //     first_and_last_digits_in_line.push_str(number);
-            //     break 'outer;
-            // }
             if end_of_line.ends_with(word) {
                 first_and_last_digits_in_line.push_str(number);
                 break 'outer;
@@ -193,12 +157,9 @@ fn get_first_and_last_digits(line: &str) -> String {
         first_and_last_digits_in_line.push('0');
     }
 
-    // parsed_lines.push_str(&format!("{}\n", first_and_last_digits_in_line));
     first_and_last_digits_in_line
 }
 
-// Moving this out of the function to avoid allocating a new array every time.
-// (this seems to make only a small difference; ~20ms in debug)
 const WORD_NUMBER_MAPPING: [(&str, &str); 9] = [
     ("one", "1"),
     ("two", "2"),
