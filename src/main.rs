@@ -13,6 +13,8 @@ mod challenges {
     }
 }
 
+const READ_CHUNK_SIZE: usize = 1_000;
+
 fn main() {
     let mut start_time: Instant;
 
@@ -61,8 +63,17 @@ fn main() {
         let reader_thread = thread::spawn(move || {
             if let Ok(file) = std::fs::File::open(&input) {
                 let reader = std::io::BufReader::new(file);
+                let mut lines_chunk = Vec::with_capacity(READ_CHUNK_SIZE); // some arbitrary number FIXME
                 for line in reader.lines() {
-                    tx.send(line.unwrap()).unwrap();
+                    lines_chunk.push(line.unwrap());
+                    // tx.send(line.unwrap()).unwrap();
+                    if lines_chunk.len() >= READ_CHUNK_SIZE {
+                        tx.send(lines_chunk.join("\n")).unwrap();
+                        lines_chunk.clear();
+                    }
+                }
+                if !lines_chunk.is_empty() {
+                    tx.send(lines_chunk.join("\n")).unwrap();
                 }
             }
             drop(tx);
@@ -71,8 +82,11 @@ fn main() {
         // Process lines in another thread.
         let accumulator_thread = thread::spawn(move || {
             let mut result = 0;
-            for line in rx {
-                result += get_first_and_last_digits(&line)
+            // for line in rx {
+            //     result += get_first_and_last_digits(&line).parse::<i32>().unwrap();
+            // }
+            for received in rx {
+                result += get_first_and_last_digits(&received)
                     .parse::<i32>()
                     .unwrap();
             }
@@ -83,7 +97,6 @@ fn main() {
         reader_thread.join().unwrap();
         let result = accumulator_thread.join().unwrap();
         println!("{}: {}ms", day_and_part, start_time.elapsed().as_millis());
-
 
         // // let input = std::fs::read_to_string(input).unwrap();
         // // read line-by-line
