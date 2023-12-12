@@ -13,7 +13,7 @@ mod challenges {
     }
 }
 
-const READ_CHUNK_SIZE: usize = 1_000;
+const READ_CHUNK_SIZE: usize = 500;
 
 fn main() {
     let mut start_time: Instant;
@@ -86,9 +86,10 @@ fn main() {
             //     result += get_first_and_last_digits(&line).parse::<i32>().unwrap();
             // }
             for received in rx {
-                result += get_first_and_last_digits(&received)
-                    .parse::<i32>()
-                    .unwrap();
+                // result += get_first_and_last_digits(&received).parse::<i32>().unwrap();
+                for line in received.lines() {
+                    result += get_first_and_last_digits(line).parse::<i32>().unwrap();
+                }
             }
             result
         });
@@ -131,7 +132,7 @@ fn main() {
     }
 }
 
-fn get_first_and_last_digits(line: &String) -> String {
+fn get_first_and_last_digits(line: &str) -> String {
     let mut first_and_last_digits_in_line = String::new();
 
     let mut beginning_of_line = String::new();
