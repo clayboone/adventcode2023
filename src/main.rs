@@ -177,8 +177,12 @@ fn get_first_and_last_digits(line: &str) -> String {
             continue;
         }
 
-        for (word, number) in WORD_NUMBER_MAPPING {
-            if end_of_line.ends_with(word.chars().rev().collect::<String>().as_str()) {
+        for (word, number) in REVERSED_WORD_NUMBER_MAPPING {
+            // if end_of_line.ends_with(word.chars().rev().collect::<String>().as_str()) {
+            //     first_and_last_digits_in_line.push_str(number);
+            //     break 'outer;
+            // }
+            if end_of_line.ends_with(word) {
                 first_and_last_digits_in_line.push_str(number);
                 break 'outer;
             }
@@ -205,4 +209,15 @@ const WORD_NUMBER_MAPPING: [(&str, &str); 9] = [
     ("seven", "7"),
     ("eight", "8"),
     ("nine", "9"),
+];
+const REVERSED_WORD_NUMBER_MAPPING: [(&str, &str); 9] = [
+    ("eno", "1"),
+    ("owt", "2"),
+    ("eerht", "3"),
+    ("ruof", "4"),
+    ("evif", "5"),
+    ("xis", "6"),
+    ("neves", "7"),
+    ("thgie", "8"),
+    ("enin", "9"),
 ];
